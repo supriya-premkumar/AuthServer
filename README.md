@@ -14,6 +14,7 @@ is written in html, css and js. The two backend servers are written in python an
 https://supriya.tech
 
 #### Demo Screencast
+Has a 30 second wait to trigger a timeout. Easier for the demo :-)
 <img src='https://media.giphy.com/media/NUw6vyzSmNGzy3hCzE/giphy.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 #### Dependencies:
