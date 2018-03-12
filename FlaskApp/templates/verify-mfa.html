@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>Assignment</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+      <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+      <script src="{{ url_for('static', filename='js/mfa.js') }}"></script>
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+      <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+   </head>
+   <div class="container">
+   <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+         <div class="panel panel-login">
+            <div class="panel-heading">
+               <div class="row">
+                  <div class="col-xs-24">
+                     <a href="#" class="active">Enter your MFA Token</a>
+                  </div>
+               </div>
+               <hr>
+            </div>
+            <div class="panel-body">
+               <div class="row">
+                  <div class="col-lg-12">
+                     <form id="login-form" action="/validate-mfa-token" method="post" role="form" style="display: block;">
+                        <div class="form-group">
+                           <div class="form-group">
+                              <input type="otp-token" name="otp-token" id="otp-token" tabindex="2" class="form-control" placeholder="OTP Token">
+                           </div>
+                        </div>
+                        {% if opts.invalid_totp_token %}
+                        <div class="row">
+                           <div class="col-sm-6 col-sm-offset-3">
+                              <span class="error text-danger">Invalid MFA Token</span>
+                           </div>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                           <div class="col-sm-6 col-sm-offset-3">
+                              <input type="submit" name="register-submit-mfa" id="register-submit-mfa" tabindex="4" class="form-control btn btn-login" value="Login">
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</html>

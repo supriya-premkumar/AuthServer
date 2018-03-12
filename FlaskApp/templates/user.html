@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>Assignment</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+      <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+      <script src="{{ url_for('static', filename='js/user.js') }}"></script>
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+      <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+      <script> var accessToken = '{{ opts.user.account["token"] }}'; </script>
+   </head>
+   <div class="container">
+      <div class="row">
+         <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-login">
+               <div class="panel-heading">
+                  <div class="row">
+                     <div class="col-xs-24">
+                        <a href="#" class="active">Choose from the following!</a>
+                     </div>
+                  </div>
+                  <hr>
+               </div>
+               <div class="panel-body">
+                  <div class="row">
+                     <div class="col-lg-8 col-md-offset-3">
+                        <img width=128 height=128 id="go" src="{{ url_for('static', filename='golang.png') }}"></img>
+                        <img width=128 height=128 id="py" src="{{ url_for('static', filename='python.png') }}"></img>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</html>
