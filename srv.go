@@ -37,10 +37,12 @@ func main() {
 	fmt.Println("LISTEN AND SERVE OK")
 }
 
+// POST handler
 func greet(w http.ResponseWriter, r *http.Request) {
 	var a access
 	var u user
 	w.Header().Set("Content-type", "application/json")
+	// Allow requests originating only from the flask app
 	w.Header().Set("Access-Control-Allow-Origin", "https://supriya.tech")
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -50,7 +52,6 @@ func greet(w http.ResponseWriter, r *http.Request) {
 	if json.Unmarshal(body, &a) != nil {
 		fmt.Println("Unmarshall Error")
 	}
-
 
 	session, err := mgo.Dial("localhost:27017")
 	if err != nil {
@@ -62,6 +63,8 @@ func greet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "user not found", 404)
 	}
+
+	// Validate session using the token
 	now := bson.Now()
 	expired := u.ExpiresAt
 	delta := expired.Sub(now)

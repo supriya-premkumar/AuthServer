@@ -6,6 +6,7 @@ connection = Connection("localhost:27017")
 import ssl
 
 class S(BaseHTTPRequestHandler):
+    # Allow requests originating only from the flask app
     def _set_headers(self):
         self.send_header('Content-type', 'text/html')
         self.send_header('Access-Control-Allow-Origin', 'https://supriya.tech')
@@ -13,13 +14,12 @@ class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        self.wfile.write("<html><body><h1>hi!</h1></body></html>")
+        self.wfile.write("<html><body><h1>I'm Alive!</h1></body></html>")
 
     def do_HEAD(self):
         self._set_headers()
 
     def do_POST(self):
-        # Doesn't do anything with posted data
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
         post_data = json.loads(post_data)
@@ -33,6 +33,7 @@ class S(BaseHTTPRequestHandler):
             self.send_response(404)
             self._set_headers()
             self.wfile.write("Error! User not found. Please register")
+        # Session validation
         if found_user['expires_at'] < datetime.utcnow():
             self.send_response(401)
             self._set_headers()

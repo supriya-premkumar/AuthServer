@@ -1,4 +1,10 @@
 $(function(){
+  // Language click icon handlers. These will POST to respective respective
+  // endpoints and collect reponses. On session valid it alerts with a
+  // unique greeting. Once the token is no longer valid, it redirects to the Login
+  // page to reauthenticate
+
+  // go REST POSTer
   $('#go').click(function(e) {
     var tok = {"token":accessToken};
     $.ajax({
@@ -25,6 +31,8 @@ $(function(){
        }
    });
   });
+
+  // python REST POSTer
   $('#py').click(function(e) {
     var tok = {"token":accessToken};
     $.ajax({

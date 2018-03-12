@@ -18,11 +18,13 @@ sys.path.append(
 from FlaskApp import app, User, generate_token
 
 class TestFlaskAppHappyPath(unittest.TestCase):
+    # Basic TestCase checking whether the site is up
     def test_site_is_up(self):
         self.test_app = app.test_client()
         response = self.test_app.get("/")
         self.assertEquals(response.status, "200 OK")
 
+    # Tests whether a simple user registration without MFA.
     def test_register_successful_user_without_mfa(self):
         self.test_app = app.test_client()
         post_data = {}
@@ -33,6 +35,7 @@ class TestFlaskAppHappyPath(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "302 FOUND")
 
+    # Tests MFA regsitration.
     def test_register_successful_user_with_mfa(self):
         self.test_app = app.test_client()
         post_data = {}
@@ -44,6 +47,7 @@ class TestFlaskAppHappyPath(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "302 FOUND")
 
+    # Tests login on non MFA enabled users
     def test_login_successful_user_without_mfa(self):
         self.test_app = app.test_client()
         # Register
@@ -63,6 +67,7 @@ class TestFlaskAppHappyPath(unittest.TestCase):
         response = self.test_app.post('/', data=post_data)
         self.assertEquals(response.status, "200 OK")
 
+    # Tests login on MFA enabled users. The actual MFA code validation and QR-Code scanning part is stubbed out.
     def test_login_successful_user_with_mfa(self):
         self.test_app = app.test_client()
         # Register
@@ -81,7 +86,9 @@ class TestFlaskAppHappyPath(unittest.TestCase):
         response = self.test_app.post('/', data=post_data)
         self.assertEquals(response.status, "200 OK")
 
+# Handles corner cases in the application
 class TestFlaskAppCornerCases(unittest.TestCase):
+    # Test empty username registration. Expect 400
     def test_username_empty(self):
         self.test_app = app.test_client()
         post_data = {}
@@ -92,6 +99,7 @@ class TestFlaskAppCornerCases(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "400 BAD REQUEST")
 
+    # test username < 4 characters. Expect 400
     def test_username_less_than_4_chars(self):
         self.test_app = app.test_client()
         post_data = {}
@@ -102,6 +110,7 @@ class TestFlaskAppCornerCases(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "400 BAD REQUEST")
 
+    # Tests empty password registration. Expect 400
     def test_password_empty(self):
         self.test_app = app.test_client()
         post_data = {}
@@ -112,7 +121,8 @@ class TestFlaskAppCornerCases(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "400 BAD REQUEST")
 
-    def test_username_less_than_8_chars(self):
+    # Tests password < 8 characters. Expect 400
+    def test_password_less_than_8_chars(self):
         self.test_app = app.test_client()
         post_data = {}
         post_data['username'] = "testUser7"
@@ -122,6 +132,7 @@ class TestFlaskAppCornerCases(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "400 BAD REQUEST")
 
+    # Tests emtpu email registration. Expect 400
     def test_email_empty(self):
         self.test_app = app.test_client()
         post_data = {}
@@ -132,6 +143,7 @@ class TestFlaskAppCornerCases(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "400 BAD REQUEST")
 
+    # Tests invalid email format. Expect 400
     def test_email_invalid(self):
         self.test_app = app.test_client()
         post_data = {}
@@ -142,6 +154,7 @@ class TestFlaskAppCornerCases(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "400 BAD REQUEST")
 
+    # Tests mismatched password and confirm password. Expect 400
     def test_password_mismatch(self):
         self.test_app = app.test_client()
         post_data = {}
@@ -152,6 +165,7 @@ class TestFlaskAppCornerCases(unittest.TestCase):
         response = self.test_app.post('/sign-up', data=post_data)
         self.assertEquals(response.status, "400 BAD REQUEST")
 
+    # Tests failed login. Expect 401
     def test_invalid_login(self):
         # Register
         self.test_app = app.test_client()
@@ -171,6 +185,7 @@ class TestFlaskAppCornerCases(unittest.TestCase):
         self.assertEquals(response.status, "401 UNAUTHORIZED")
 
 class PythonRESTServerTest(unittest.TestCase):
+    # Test Python API Server POST call with a valid token. Expect 200 and a valid greeting
     def test_py_rest_server(self):
         # POST a valid user
         self.test_app = app.test_client()
@@ -192,7 +207,11 @@ class PythonRESTServerTest(unittest.TestCase):
         post_data['token'] = found_user['token']
         r = requests.post("https://localhost:8000", data = json.dumps(post_data), verify=False)
         self.assertEquals(r.status_code, 200)
+        found = "Hello testuser12! Python is pleased to meet you!" in r.text
+        self.assertEquals(found, True)
 
+    # Test invalid token python REST call. Fake update expiry to be 10 seconds from
+    # start of the test. Expects 401
     def test_py_rest_server_timeout(self):
         self.test_app = app.test_client()
 
@@ -201,7 +220,7 @@ class PythonRESTServerTest(unittest.TestCase):
         connection = Connection(mongo_url)
         db = connection.auth.users
         found_user = db.find_one()
-	
+
 	post_data = {}
         post_data['token'] = found_user['token']
         r = requests.post("https://localhost:8000", data = json.dumps(post_data), verify=False)
@@ -213,10 +232,6 @@ class PythonRESTServerTest(unittest.TestCase):
 	sleep(10)
 	r = requests.post("https://localhost:8000", data = json.dumps(post_data), verify=False)
         self.assertEquals(r.status_code, 401)
-	
-	
-
-   	 
 
 if __name__ == '__main__':
     unittest.main()
