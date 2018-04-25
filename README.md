@@ -1,5 +1,4 @@
-### Apple Take Home Assignment.
-
+### Auth Server
 #### Design
 1. The backend is written in python using Flask. Data is stored in MongoDB, Front-end
 is written in html, css and js. The two backend servers are written in python and go
