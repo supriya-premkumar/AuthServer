@@ -4,7 +4,7 @@ Jinja2==2.6
 pillow==5.0.0
 Werkzeug==0.8.3
 distribute==0.6.24
-httplib2==0.8
+httplib2==0.18.0
 mock==1.0.1
 mongokit==0.8.3
 mongomock==0.0.2
